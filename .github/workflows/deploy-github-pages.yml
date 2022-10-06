@@ -1,5 +1,5 @@
-name: deploy-github-pages
-run-name: ${{ github.actor }} is depolying gh-pages
+name: deploy-gh-page
+run-name: ${{ github.actor }} is deploying gh-pages
 on:
   push:
     branches:
@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ github.token }}
+          token: ${{ github.token }} #กรณีที่เป็น private
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
@@ -18,7 +18,8 @@ jobs:
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
       - run: npm install -g yarn
-      - run: yarn
+      - run: yarn install
+      - run: |
           git remote set-url origin \
-          http://git:${{ github.token }} @github.com/${{ github.repository }}.git
+          https://git:${{ github.token }}@github.com/${{ github.repository }}.git
       - run: yarn run deploy
