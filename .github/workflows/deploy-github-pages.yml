@@ -18,7 +18,7 @@ jobs:
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
       - run: npm install -g yarn
-      - run: yarn install
+      - run: yarn
           git remote set-url origin \
           http://git:${{ github.token }} @github.com/${{ github.repository }}.git
       - run: yarn run deploy
