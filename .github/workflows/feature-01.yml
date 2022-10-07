@@ -10,7 +10,7 @@ jobs:
     steps:
       - uses: actions/checkout@v3
         with:
-          token: ${{ github.token }} #กรณีที่เป็น private
+          token: ${{ github.token }}
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
@@ -19,7 +19,6 @@ jobs:
           git config --global user.name "${{ github.actor }}"
       - run: npm install -g yarn
       - run: yarn install --frozen-lockfile
-      - run: Build project
       - run: npx ng Build --configuration=production --base-href="/${{ github.event.respository.name}}/"
       - run: yarn run lint
       - run: yarn run test:ci
