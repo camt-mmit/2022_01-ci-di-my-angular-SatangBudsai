@@ -2,7 +2,7 @@ name: main release
 run-name: ${{ github.actor }} is main releasing feature
 on:
   push:
-    branches:
+    tags:
       - v*.*.*
 jobs:
   ci-main:
