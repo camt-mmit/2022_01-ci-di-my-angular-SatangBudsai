@@ -1,25 +1,39 @@
-name: "feature-release"
-
+name: feature release
+run-name: ${{ github.actor }} is releasing feature
 on:
   push:
-    tags:
-      - "v*"
-
+    branches:
+      - b*.*.*
 jobs:
-  feature-release:
-    name: "feature-release"
-    runs-on: "ubuntu-latest"
-
+  ci-feature:
+    runs-on: ubuntu-latest
+    env:
+      REF_NAME: ${{ github.ref }}
     steps:
-      # ...
-      - name: "Build & test"
-        run: |
-          echo "done!"
-
-      - uses: "marvinpinto/action-automatic-releases@latest"
+      - uses: actions/checkout@v3
         with:
-          repo_token: "${{ secrets.RELEASE_TOKEN }}"
-          prerelease: false
-          files: |
-            LICENSE.txt
-            *.jar
+          token: ${{ secrets.PUSH_MAIN }}
+      - uses: actions/setup-node@v3
+        with:
+          node-version: "16"
+      - name: Setup environment variables
+        run: |
+          VERSION="${REF_NAME#refs/heads/b}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          ehco "BRANCH_NAME=b${VERSION}" >> $GITHUB_ENV
+          echo "TAG_NAME=v${VERSION}" >> $GITHUB_ENV
+      - run: |
+          git config --global user.email "${{ github.event.pusher.email }}"
+          git config --global user.name "${{ github.actor }}"
+      - run: npm install -g yarn
+      - run: yarn install --frozen-lockfile
+      - run: npx ng build --configuration=production --base-href="/${{ github.event.repository.name}}/"
+      - run: yarn run lint
+      - run: yarn run test:ci
+      - run: |
+          git fetch --unshallow
+          git checkout master
+          git merge ${{ env.BRANCH_NAME }}
+          git push origin master
+          git tag -a ${{ env.BRANCH_NAME }} -m "my version ${{ env.BRANCH_NAME }}"
+          git push origin master --tags
