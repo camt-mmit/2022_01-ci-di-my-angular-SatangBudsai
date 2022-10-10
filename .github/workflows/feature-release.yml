@@ -16,22 +16,26 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
-      - name: Setup enviroment
+      - name: Setup environment variables
         run: |
           VERSION="${REF_NAME#refs/heads/b}"
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           echo "BRANCH_NAME=b${VERSION}" >> $GITHUB_ENV
           echo "TAG_NAME=v${VERSION}" >> $GITHUB_ENV
-      - run: |
+      - name: Setup git user
+        run: |
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
-      - run: npm install -g yarn
-      - run: yarn install --frozen-lockfile
-      - run: npx ng build --configuration=production --base-href="/${{ github.event.repository.name}}/"
-      - run: yarn run lint
-      - run: yarn run test:ci
-      - run: |
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint project
+        run: yarn run lint
+      - name: Test project
+        run: yarn run test:ci
+      - name: Merge to main
+        run: |
           git fetch --unshallow
           git checkout master
           git merge ${{ env.BRANCH_NAME }}
