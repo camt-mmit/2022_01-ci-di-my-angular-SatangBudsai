@@ -7,6 +7,8 @@ on:
 jobs:
   ci-feature-01:
     runs-on: ubuntu-latest
+    env:
+      BRANCH_NAME: ${{ github.ref }}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -14,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
+      - name: Ser environtmet var
+        run: echo "TAG_NAME=${{REF_NANE:ref/heads/#}}" >> $GITHUB_ENV
       - run: |
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
@@ -22,7 +26,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN }}
         with:
-          tag_name: ${{ github.ref }}
+          tag_name: ${{ env.TAG_NAME }}
           release_name: Release ${{ github.ref }}
           draft: false
           prerelease: false
