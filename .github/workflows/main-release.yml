@@ -3,7 +3,7 @@ run-name: ${{ github.actor }} is deploying feature-01
 on:
   push:
     branches:
-      - "feature-01"
+      - "v.*.*.*"
 jobs:
   ci-feature-01:
     runs-on: ubuntu-latest
