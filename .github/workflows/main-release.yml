@@ -16,6 +16,12 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
+      - name: Setup enviroment
+        run: |
+          VERSION="${REF_NAME#refs/heads/b}"
+          echo "VERSION=${VERSION}" >> $GITHUB_ENV
+          echo "BRANCH_NAME=b${VERSION}" >> $GITHUB_ENV
+          echo "TAG_NAME=v${VERSION}" >> $GITHUB_ENV
       - run: |
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
@@ -24,7 +30,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.RELEASE_TOKEN}}
         with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
+          tag_name: ${{ env.TAG_NAME }}
+          release_name: Release ${{ env.VERSION }}
           draft: false
           prerelease: false
