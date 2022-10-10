@@ -1,32 +1,25 @@
-name: feature release
-run-name: ${{ github.actor }} is deploying feature-01
+name: "feature-release"
+
 on:
   push:
-    branches:
-      - "v*.*.*"
+    tags:
+      - "v*"
+
 jobs:
-  ci-feature-01:
-    runs-on: ubuntu-latest
+  feature-release:
+    name: "feature-release"
+    runs-on: "ubuntu-latest"
+
     steps:
-      - uses: actions/checkout@v3
-        with:
-          token: ${{ secrets.PUSH_MAIN }}
-      - uses: actions/setup-node@v3
-        with:
-          node-version: "16"
-      - run: |
-          git config --global user.email "${{ github.event.pusher.email }}"
-          git config --global user.name "${{ github.actor }}"
-      - run: npm install -g yarn
-      - run: yarn install --frozen-lockfile
-      - run: npx ng build --configuration=production --base-href="/${{ github.event.respository.name}}/"
-      - run: yarn run lint
-      - run: yarn run test:ci
-      - name: Merge to master
+      # ...
+      - name: "Build & test"
         run: |
-          git fetch --unshallow
-          git checkout master
-          git merge ${{ env.BRANCH_NAME }}
-          git push origin master
-          git tag add -a ${{ env.BRANCH_NAME }} -m "my version ${{ env.BRANCH_NAME }}"
-          git push origin master --tags
+          echo "done!"
+
+      - uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.RELEASE_TOKEN }}"
+          prerelease: false
+          files: |
+            LICENSE.txt
+            *.jar
