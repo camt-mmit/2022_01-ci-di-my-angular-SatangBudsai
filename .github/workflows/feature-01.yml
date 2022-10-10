@@ -1,9 +1,9 @@
-name: feature-01-CI
-run-name: ${{ github.actor }} is deploying feature-01
+name: feature-01 CI
+run-name: ${{ github.actor }} is integrating feature-01
 on:
   push:
     branches:
-      - "feature-01"
+      - feature-01
 jobs:
   ci-feature-01:
     runs-on: ubuntu-latest
@@ -14,12 +14,15 @@ jobs:
       - uses: actions/setup-node@v3
         with:
           node-version: "16"
-          cache: "yarn"
-      - run: |
+      - name: Setup git user
+        run: |
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
-      - run: npm install -g yarn
-      - run: yarn install --frozen-lockfile
-      - run: npx ng build --configuration=production --base-href="/${{ github.event.respository.name}}/"
-      - run: yarn run lint
-      - run: yarn run test:ci
+      - name: Install yarn
+        run: npm install -g yarn
+      - name: Install dependencies
+        run: yarn install --frozen-lockfile
+      - name: Lint project
+        run: yarn run lint
+      - name: Test project
+        run: yarn run test:ci
