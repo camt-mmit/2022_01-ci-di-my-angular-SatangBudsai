@@ -22,7 +22,8 @@ jobs:
           echo "VERSION=${VERSION}" >> $GITHUB_ENV
           ehco "BRANCH_NAME=b${VERSION}" >> $GITHUB_ENV
           echo "TAG_NAME=v${VERSION}" >> $GITHUB_ENV
-      - run: |
+      - name: Setup git user
+        run: |
           git config --global user.email "${{ github.event.pusher.email }}"
           git config --global user.name "${{ github.actor }}"
       - run: npm install -g yarn
