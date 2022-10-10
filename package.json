@@ -6,7 +6,11 @@
     "start": "ng serve",
     "build": "ng build",
     "watch": "ng build --watch --configuration development",
+<<<<<<< HEAD
     "deploy": "ng build --configuration production --base-href=/2022_01-ci-di-my-angular-SatangBudsai/ && cp ./dist/my-angular/index.html ./dist/my-angular/404.html && gh-pages -d ./dist/my-angular",
+=======
+    "deploy": "ng build --configuration production --base-href=/2022_01-ci-di-my-angular-GunDumMan/ && cp ./dist/my-angular/index.html ./dist/my-angular/404.html && gh-pages -d ./dist/my-angular",
+>>>>>>> f07be43c (ttt)
     "test": "ng test",
     "test:ci": "ng test --no-watch --no-progress --browsers=ChromeHeadlessCI",
     "lint": "ng lint"
